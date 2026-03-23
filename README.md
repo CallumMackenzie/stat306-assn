@@ -33,13 +33,12 @@ docker build --platform linux/amd64 -t stat-project .
 Run this after making changes to `analysis.R`:
 
 ```bash
-./scripts/run.sh
+/scripts/run.sh
 ```
 
 This will:
 1. Wipe and recreate `images/`, `tables/`, and `data/`
-2. Pull the dataset from Kaggle
-3. Execute `analysis.R` inside the container, writing outputs to your local filesystem
+2. Execute `analysis.R` inside the container, writing outputs to your local filesystem
 
 ### Compile the report
 
