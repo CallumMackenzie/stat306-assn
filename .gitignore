@@ -1,5 +1,5 @@
-images/
-tables/
+latex/images/
+latex/tables/
 pdf/
 
 .build/
