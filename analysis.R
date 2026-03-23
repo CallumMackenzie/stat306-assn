@@ -1,5 +1,3 @@
-
-# install.packages("stargazer", repos = "https://cloud.r-project.org")
 library(ggplot2)
 library(stargazer)
 
