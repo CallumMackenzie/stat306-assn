@@ -182,11 +182,21 @@ Similarly, BMI itself and its relationship with premiums are weakly positive amo
 
 There are myriad factors to consider in attempting to understand the prices of medical insurance premiums, especially with the contentious notion of systemic discrimination. Thus, we look to linear regression to explain whether a sex is a primary determinant of what one is charged for medical insurance.
 
+We will examine two models:
+\begin{enumerate}
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}$
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}$
+\end{enumerate}
+
+Evidenced by our EDA plots, there is negligible interaction between sex and age or sex and BMI, so we are only considering models which have the sex covariate changing the intercept.
+
+\newpage
+
 \input{tables/regression_table.tex}
 
 In addition to the table above, we will note that the p-vale for the intercept in the model with sex as the only covariate is $0.134$, and in the one with age, sex, and BMI, it is $0.164$.
 
-We now have a clear picture of the data. First,  the sex coefficient is not a significant contributor to the response variable alone, evident by the p-value not reaching 0.05. This is consistent with the visual intuition obtained from the previous scatter plot that related age and BMI to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex mode, while jumping to 0.0278 in the second one.
+We now have a clear picture of the data. First, we will check the hypothesis for the gender coefficient $H_0:\beta_1=0$, $H_1:B_1\neq0$. Given that the p-value for $\beta_0$ is below $0.05$ for both models, we accept the null hypothesis that there is no difference in the insurance premium between the sexes. This is consistent with the visual intuition obtained from the previous scatter plot that related age and BMI to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex mode, while jumping to 0.0278 in the second one.
 
 \section{Conclusion}
 
