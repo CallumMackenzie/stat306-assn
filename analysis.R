@@ -63,6 +63,14 @@ age_vs_log_charges_plot <-
 age_vs_log_charges_plot
 save_plot("age_vs_log_charges_distribution.png", age_vs_log_charges_plot)
 
+age_vs_charges_plot <-
+  ggplot(df, aes(x=bmi, y=annual_premium, color=sex)) +
+  geom_point(alpha = 0.2, size = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +
+	labs(title="Age Vs. Charges", x="Age (Years)", y="Charges (USD)")
+age_vs_charges_plot
+save_plot("age_vs_charges_distribution.png", age_vs_log_charges_plot)
+
 bmi_vs_sex_plot <- 
 	ggplot(df, aes(x=sex, y=bmi, color=sex)) + 
   geom_boxplot(alpha = 0.7, outlier.size = 0.8) +
@@ -83,6 +91,18 @@ save_plot("bmi_vs_log_charges_distribution.png", bmi_vs_log_charges_plot)
 m1 <- lm(log(annual_premium) ~ sex, data=df)
 m2 <- lm(log(annual_premium) ~ sex + age + bmi, data=df)
 
+m1nolog <- lm(annual_premium ~ sex, data=df)
+m2nolog <- lm(annual_premium ~ sex + age + bmi, data=df)
+
+# Assess model fit for m2. Clearly not so good.
+ggplot() +
+  geom_point(aes(x=m2$fitted.values, y=m2$residuals), alpha = 0.2, size = 0.6) +
+  labs(title="Residuals vs Fitted Values", x="Fitted Values", y="Residuals")
+
+summary(m1)
+summary(m2)
+summary(m1nolog)
+summary(m2nolog)
 
 if (file.exists("latex/tables/regression_table.tex")) file.remove("tables/regression_table.tex")
 if (!dir.exists("latex")) dir.create("latex")

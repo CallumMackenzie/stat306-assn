@@ -184,11 +184,13 @@ There are myriad factors to consider in attempting to understand the prices of m
 
 \input{tables/regression_table.tex}
 
-We now have a clear picture of the data. First,  the sex coefficient is not a significant contributor to the response variable alone, evident by the p-value not reaching 0.05. This is consistent with the visual intuition obtained from the previous scatter plot that related age and bmi to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex mode, while jumping to 0.0278 in the second one.
+In addition to the table above, we will note that the p-vale for the intercept in the model with sex as the only covariate is $0.134$, and in the one with age, sex, and BMI, it is $0.164$.
+
+We now have a clear picture of the data. First,  the sex coefficient is not a significant contributor to the response variable alone, evident by the p-value not reaching 0.05. This is consistent with the visual intuition obtained from the previous scatter plot that related age and BMI to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex mode, while jumping to 0.0278 in the second one.
 
 \section{Conclusion}
 
-The motivating question for this report was whether sex was a significant predictor for medical insurance premiums when controlling for demographic conditions such as age and BMI. According to this study, we are confident in the assertion that there exists no strong relationship between what an individual is charged and their sex. However, the particular covariates used only account for under 3\% of the variance in insurance premiums, thus there may still exist unobserved cofounding variables. 
+The motivating question for this report was whether sex was a significant predictor for medical insurance premiums when controlling for demographic conditions such as age and BMI. According to this study, we are confident in the assertion that there exists no strong relationship between what an individual is charged and their sex. However, the particular covariates used only account for under 3\% of the variance in insurance premiums, thus there may still exist unobserved confounding variables. 
 
 \section{Statement of AI}
 
