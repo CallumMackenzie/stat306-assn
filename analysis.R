@@ -110,6 +110,36 @@ summary(m2)
 summary(m1nolog)
 summary(m2nolog)
 
+
+# Better model now
+mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ risk_score + log(total_claims_paid + 1), data=df)
+summary(mrisk)
+
+# Check assumptions
+qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
+qqline(residuals(mrisk), col="red")
+
+# Examine residuals, still off
+ggplot() +
+  geom_point(aes(x=mrisk$fitted.values, y=mrisk$residuals), alpha = 0.2, size = 0.6) +
+  labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
+
+# Plot risk vs log charges
+risk_vs_log <-
+	ggplot(df, aes(x=risk_score, y=log(annual_premium), color=sex)) + 
+  geom_point(alpha = 0.2, size = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +
+	labs(title="Risk Score Vs. Log Charges", x="Risk Score", y="Log Charges (USD)")
+risk_vs_log
+
+# Plot total claims paid
+huh_vs_log <-
+	ggplot(df, aes(x=log(total_claims_paid), y=log(annual_premium - min(annual_premium)), color=sex)) + 
+  geom_point(alpha = 0.2, size = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +
+	labs(title="Log Total Claims Paid Vs. Log Charges", x="Total Claims Paid (log USD)", y="Log Charges (log USD)")
+huh_vs_log
+
 if (file.exists("latex/tables/regression_table.tex")) file.remove("tables/regression_table.tex")
 if (!dir.exists("latex")) dir.create("latex")
 if (!dir.exists("latex/tables")) dir.create("latex/tables")
