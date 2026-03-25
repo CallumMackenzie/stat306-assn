@@ -91,9 +91,6 @@ save_plot("bmi_vs_log_charges_distribution.png", bmi_vs_log_charges_plot)
 m1 <- lm(log(annual_premium) ~ sex, data=df)
 m2 <- lm(log(annual_premium) ~ sex + age + bmi, data=df)
 
-m1nolog <- lm(annual_premium ~ sex, data=df)
-m2nolog <- lm(annual_premium ~ sex + age + bmi, data=df)
-
 # Assess model fit for m2. Clearly not so good.
 ggplot() +
   geom_point(aes(x=m2$fitted.values, y=m2$residuals), alpha = 0.2, size = 0.6) +
@@ -102,9 +99,6 @@ ggplot() +
 # Q-Q Plots
 qqnorm(residuals(m2), main = "Normal Q-Q Plot for Log Model")
 qqline(residuals(m2), col = "red")
-qqnorm(residuals(m2nolog), main = "Normal Q-Q Plot for Non-log Model")
-qqline(residuals(m2nolog), col = "red")
-
 
 # Better model now
 mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1), data=df)
