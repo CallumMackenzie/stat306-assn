@@ -138,10 +138,7 @@ qqline(residuals(mrisk2), col="red")
 dev.off()
 
 
-# Examine residuals, still off
-#ggplot() +
-#  geom_point(aes(x=mrisk$fitted.values, y=mrisk$residuals), alpha = 0.2, size = 0.6) +
-#  labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
+
 residual_plot <- ggplot() +
   geom_point(aes(x=mrisk2$fitted.values, y=mrisk2$residuals), alpha = 0.2, size = 0.6) +
   labs(title="Residuals vs Fitted Values for Model", x="Fitted Values", y="Residuals")
@@ -153,7 +150,7 @@ if (!dir.exists("latex")) dir.create("latex")
 if (!dir.exists("latex/tables")) dir.create("latex/tables")
 file.create("latex/tables/regression_table.tex")
 table_lines <- capture.output(
-  stargazer(m1, m2, mrisk2,
+  stargazer(m1, mrisk2,
             type="latex",
             title="Staged Linear Regression Results",
             covariate.labels=c("Sex (Male)", "Age (Years)", "BMI (kg/m$^2$)", "Risk Score", "Log(Claims Paid)"),
