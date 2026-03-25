@@ -50,9 +50,9 @@
 
 \hypersetup{
   colorlinks = true,
-  linkcolor  = accentblue,
-  citecolor  = accentblue,
-  urlcolor   = accentblue
+  linkcolor = accentblue,
+  citecolor = accentblue,
+  urlcolor = accentblue
 }
 
 \begin{document}
@@ -85,7 +85,7 @@
 
 \section{Introduction}
 
-The following report focuses on whether sex exerts predicative power on medical insurance premiums after controlling for body mass index (BMI) and age. Motivation comes from a collective interest in whether non-meritorious, sex-based discrimination is present in the context of medical insurance applicants. Such an influence could potentially suggest that insurance institutions operate under systemically discriminatory practices as it pertains to sex. Data was observed from a collection of studies conducted by accredited institutions such as the World Health Organization, the National Institute of Health, the Centre for Disease Control and Prevention, and more. The dataset itself provides information on approximately 100,000, including their “...demographics, socioeconomic status, health conditions, lifestyle factors, insurance plans, and medical expenditures”. As mentioned, age and BMI will serve as a primary basis for analysis. It may be helpful to note that the source under scrutiny that collected these studies underwent a partial cleaning and normalization procedure, so certain pieces of data, particularly in the extremities, may seem strange in isolation.
+The following report focuses on whether sex exerts predictive power on medical insurance premiums after controlling for body mass index (BMI) and age. Motivation comes from a collective interest in whether non-meritorious, sex-based discrimination is present in the context of medical insurance applicants. Such an influence could potentially suggest that insurance institutions operate under systemically discriminatory practices as it pertains to sex. Data was observed from a collection of studies conducted by accredited institutions such as the World Health Organization, the National Institute of Health, the Centre for Disease Control and Prevention, and more. The dataset itself provides information on approximately 100,000, including their “...demographics, socioeconomic status, health conditions, lifestyle factors, insurance plans, and medical expenditures”. As mentioned, age and BMI will serve as a primary basis for analysis. It may be helpful to note that the source under scrutiny that collected these studies underwent a partial cleaning and normalization procedure, so certain pieces of data, particularly in the extremities, may seem strange in isolation.
 
 \section{Analysis}
 
@@ -93,7 +93,6 @@ The following report focuses on whether sex exerts predicative power on medical 
 
 To begin, we introduce the variables used for analysis and their respective shapes.
 
-% --- Example figure -----------------------------------------
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.75\textwidth]{images/insurance_charges_distribution.png}
@@ -200,7 +199,7 @@ We now have a clear picture of the data. First, we will check the hypothesis for
 
 \section{Conclusion}
 
-The motivating question for this report was whether sex was a significant predictor for medical insurance premiums when controlling for demographic conditions such as age and BMI. According to this study, we are confident in the assertion that there exists no strong relationship between what an individual is charged and their sex. However, the particular covariates used only account for under 3\% of the variance in insurance premiums, thus there may still exist unobserved confounding variables. 
+The motivating question for this report was whether sex was a significant predictor for medical insurance premiums when controlling for demographic conditions such as age and BMI. According to this study, we are confident in the assertion that there exists no strong relationship between what an individual is charged and their sex. However, the particular covariates used only account for under 3\% of the variance in insurance premiums, thus there may still exist unobserved confounding variables. This is a limitation of the our study. To address this, in future analysis, we should include additional variables in the model so to explain more of the data's variation such as smoking status, geographic region, previous health complications, since the core motivation is to isolate the unencumbered interaction between sex medical insurance premiums.
 
 \section{Statement of AI}
 
