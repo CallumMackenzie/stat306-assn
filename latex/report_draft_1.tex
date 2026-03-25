@@ -67,7 +67,7 @@
 
   \vspace{1.5cm}
 
-	{\large Matthew deHaas, Callum Mackenzie, Saksham Saksham, ...}
+	{\large Matthew deHaas, Callum Mackenzie, Saksham Saksham, Nihar Mahajan}
 
   \vspace{1.5cm}
 
@@ -215,7 +215,7 @@ In addition to the table above, we will note that the p-value for the intercept 
 
 We now have a clear picture of the data. First, we will check the hypothesis for the gender coefficient $H_0:\beta_1=0$, $H_1:B_1\neq0$. Given that the p-value for $\beta_0$ is below $0.05$ for both models, we accept the null hypothesis that there is no difference in the insurance premium between the sexes. This is consistent with the visual intuition obtained from the previous scatter plot that related age and BMI to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex model, while jumping to 0.1793 in the second one. 
 
-We can see that other than sex, all of the other coefficients are statistically significant. However, the BMI and age are making up a small portion of the variance explained, and have very small coefficients of $-0.0083137$ and $0.0026450$. It is clear then that the risk score and claims paid have a larger influence on the insurance premium, as their coefficients are $1.4853615$ and $0.0428196$ respectively. Thus, under the hypothesis tests $H_0:\beta_4=0$, $H_1:\beta_4\neq0$, we reject the null hypothesis and state there is a relationship between risk score and insurance premiums. Similar holds for claims paid: $H_0:\beta_5=0$, $H_1:\beta_5\neq 0$, we reject the null and state there is a relationship between claims paid and insurance premium. 
+We can see that other than sex, all of the other coefficients are statistically significant. Risk score and log claims paid have small nominal coefficients of $-0.0083$ and $0.0026$, respectively. Conversely, age and BMI have larger coefficients of $1.4854$ and $0.0428$, respectively. Under the hypothesis tests $H_0: \beta_4 = 0$, $H_1: \beta_4 \neq 0$, we reject the null hypothesis and state there is a statistically significant relationship between risk score and insurance premiums. Similar logic holds for log claims paid ($H_0: \beta_5 = 0$, $H_1: \beta_5 \neq 0$); we reject the null and conclude there is a relationship between historical claims paid and the resulting insurance premiums.
 
 To evaluate our assumptions we will examine the Q-Q and residual-fitted value plots:
 
