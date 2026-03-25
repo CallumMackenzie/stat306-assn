@@ -24,3 +24,5 @@ pdf/
 Thumbs.db
 Desktop.ini
 *~
+
+**.ipynb**
