@@ -86,48 +86,6 @@ bmi_vs_log_charges_plot <-
 bmi_vs_log_charges_plot
 save_plot("bmi_vs_log_charges_distribution.png", bmi_vs_log_charges_plot)
 
-# 2.4 - Linear regression 
-# Would have chosen more descriptive names but Stargazer has issues with long names for some reason
-m1 <- lm(log(annual_premium) ~ sex, data=df)
-m2 <- lm(log(annual_premium) ~ sex + age + bmi, data=df)
-
-m1nolog <- lm(annual_premium ~ sex, data=df)
-m2nolog <- lm(annual_premium ~ sex + age + bmi, data=df)
-
-# Assess model fit for m2. Clearly not so good.
-ggplot() +
-  geom_point(aes(x=m2$fitted.values, y=m2$residuals), alpha = 0.2, size = 0.6) +
-  labs(title="Residuals vs Fitted Values", x="Fitted Values", y="Residuals")
-
-# Q-Q Plots
-qqnorm(residuals(m2), main = "Normal Q-Q Plot for Log Model")
-qqline(residuals(m2), col = "red")
-qqnorm(residuals(m2nolog), main = "Normal Q-Q Plot for Non-log Model")
-qqline(residuals(m2nolog), col = "red")
-
-
-# Better model now
-mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1), data=df)
-mrisk2 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1) + age + bmi, data=df)
-summary(mrisk2)
-
-# Check assumptions
-qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
-qqline(residuals(mrisk), col="red")
-
-qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
-qqline(residuals(mrisk), col="red")
-
-# Examine residuals, still off
-ggplot() +
-  geom_point(aes(x=mrisk$fitted.values, y=mrisk$residuals), alpha = 0.2, size = 0.6) +
-  labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
-residual_plot <- ggplot() +
-  geom_point(aes(x=mrisk2$fitted.values, y=mrisk2$residuals), alpha = 0.2, size = 0.6) +
-  labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
-residual_plot
-save_plot("mrisk_residuals.png", residual_plot)
-
 # Plot risk vs log charges
 risk_vs_log <-
 	ggplot(df, aes(x=risk_score, y=log(annual_premium), color=sex)) + 
@@ -135,6 +93,7 @@ risk_vs_log <-
   geom_smooth(method = "lm", se = TRUE) +
 	labs(title="Risk Score Vs. Log Charges", x="Risk Score", y="Log Charges (USD)")
 risk_vs_log
+save_plot("risk_vs_logtotal.png", risk_vs_log)
 
 # Plot total claims paid
 huh_vs_log <-
@@ -143,6 +102,48 @@ huh_vs_log <-
   geom_smooth(method = "lm", se = TRUE) +
 	labs(title="Log Total Claims Paid Vs. Log Charges", x="Total Claims Paid (log USD)", y="Log Charges (log USD)")
 huh_vs_log
+save_plot("logclaimspaid_vs_logtotal.png", huh_vs_log)
+
+
+# 2.4 - Linear regression 
+# Would have chosen more descriptive names but Stargazer has issues with long names for some reason
+m1 <- lm(log(annual_premium) ~ sex, data=df)
+m2 <- lm(log(annual_premium) ~ sex + age + bmi, data=df)
+m1nolog <- lm(annual_premium ~ sex, data=df)
+m2nolog <- lm(annual_premium ~ sex + age + bmi, data=df)
+# Assess model fit for m2. Clearly not so good.
+ggplot() +
+  geom_point(aes(x=m2$fitted.values, y=m2$residuals), alpha = 0.2, size = 0.6) +
+  labs(title="Residuals vs Fitted Values", x="Fitted Values", y="Residuals")
+
+# Q-Q Plots for early models
+qqnorm(residuals(m2), main = "Normal Q-Q Plot for Log Model")
+qqline(residuals(m2), col = "red")
+qqnorm(residuals(m2nolog), main = "Normal Q-Q Plot for Non-log Model")
+qqline(residuals(m2nolog), col = "red")
+
+
+# Better model now
+#mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1), data=df)
+mrisk2 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1) + age + bmi, data=df)
+summary(mrisk2)
+
+# Check assumptions
+#qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
+#qqline(residuals(mrisk), col="red")
+
+qqnorm(residuals(mrisk), main = "Q-Q Plot for Model")
+qqline(residuals(mrisk), col="red")
+
+# Examine residuals, still off
+#ggplot() +
+#  geom_point(aes(x=mrisk$fitted.values, y=mrisk$residuals), alpha = 0.2, size = 0.6) +
+#  labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
+residual_plot <- ggplot() +
+  geom_point(aes(x=mrisk2$fitted.values, y=mrisk2$residuals), alpha = 0.2, size = 0.6) +
+  labs(title="Residuals vs Fitted Values for Model", x="Fitted Values", y="Residuals")
+residual_plot
+save_plot("mrisk_residuals.png", residual_plot)
 
 if (file.exists("latex/tables/regression_table.tex")) file.remove("tables/regression_table.tex")
 if (!dir.exists("latex")) dir.create("latex")
