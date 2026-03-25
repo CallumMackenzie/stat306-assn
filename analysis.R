@@ -64,7 +64,7 @@ age_vs_log_charges_plot
 save_plot("age_vs_log_charges_distribution.png", age_vs_log_charges_plot)
 
 age_vs_charges_plot <-
-  ggplot(df, aes(x=bmi, y=annual_premium, color=sex)) +
+  ggplot(df, aes(x=age, y=annual_premium, color=sex)) +
   geom_point(alpha = 0.2, size = 0.6) +
   geom_smooth(method = "lm", se = TRUE) +
 	labs(title="BMI Vs. Charges", x="Age (Years)", y="Charges (USD)")
