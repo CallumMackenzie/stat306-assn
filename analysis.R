@@ -108,8 +108,13 @@ qqline(residuals(m2nolog), col = "red")
 
 # Better model now
 mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1), data=df)
+mrisk2 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1) + age + bmi, data=df)
+summary(mrisk2)
 
 # Check assumptions
+qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
+qqline(residuals(mrisk), col="red")
+
 qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
 qqline(residuals(mrisk), col="red")
 
@@ -117,6 +122,11 @@ qqline(residuals(mrisk), col="red")
 ggplot() +
   geom_point(aes(x=mrisk$fitted.values, y=mrisk$residuals), alpha = 0.2, size = 0.6) +
   labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
+residual_plot <- ggplot() +
+  geom_point(aes(x=mrisk2$fitted.values, y=mrisk2$residuals), alpha = 0.2, size = 0.6) +
+  labs(title="Residuals vs Fitted Values for Improved Model", x="Fitted Values", y="Residuals")
+residual_plot
+save_plot("mrisk_residuals.png", residual_plot)
 
 # Plot risk vs log charges
 risk_vs_log <-
@@ -124,6 +134,7 @@ risk_vs_log <-
   geom_point(alpha = 0.2, size = 0.6) +
   geom_smooth(method = "lm", se = TRUE) +
 	labs(title="Risk Score Vs. Log Charges", x="Risk Score", y="Log Charges (USD)")
+risk_vs_log
 
 # Plot total claims paid
 huh_vs_log <-
@@ -131,6 +142,7 @@ huh_vs_log <-
   geom_point(alpha = 0.2, size = 0.6) +
   geom_smooth(method = "lm", se = TRUE) +
 	labs(title="Log Total Claims Paid Vs. Log Charges", x="Total Claims Paid (log USD)", y="Log Charges (log USD)")
+huh_vs_log
 
 if (file.exists("latex/tables/regression_table.tex")) file.remove("tables/regression_table.tex")
 if (!dir.exists("latex")) dir.create("latex")
