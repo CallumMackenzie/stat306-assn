@@ -33,7 +33,7 @@ age_plot
 save_plot("age_distribution.png", age_plot)
 
 bmi_plot <- 
-	ggplot(df, aes(x=age)) + 
+	ggplot(df, aes(x=bmi)) + 
 	geom_histogram(aes(y=after_stat(density))) + 
 	labs(title="Distribution of BMI of Subjects", x="Body Mass Index (BMI)", y="Density")
 bmi_plot
