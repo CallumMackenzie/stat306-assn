@@ -132,8 +132,11 @@ summary(mrisk2)
 #qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
 #qqline(residuals(mrisk), col="red")
 
-qqnorm(residuals(mrisk), main = "Q-Q Plot for Model")
-qqline(residuals(mrisk), col="red")
+png("latex/images/qqplot.png", width = 800, height = 600)
+qqnorm(residuals(mrisk2), main = "Q-Q Plot for Model")
+qqline(residuals(mrisk2), col="red")
+dev.off()
+
 
 # Examine residuals, still off
 #ggplot() +
