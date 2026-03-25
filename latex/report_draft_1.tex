@@ -173,7 +173,27 @@ Observe that the distribution of age among the sexes is nearly identical as per 
 
 \end{figure}
 
-Similarly, BMI itself and its relationship with premiums are weakly positive among the sexes. We can comfortably conclude now that the variables age and BMI under scrutiny here are not likely to be confounding in comparison between sex and medical insurance premiums.
+Similarly, BMI itself and its relationship with premiums are weakly positive among the sexes. We can comfortably conclude now that the variables age and BMI under scrutiny here are not likely to be confounding in comparison between sex and medical insurance premiums. Now consider the risk score:
+
+\begin{figure}[H]
+  \centering
+	\includegraphics[width=\textwidth]{images/risk_vs_logtotal.png}
+	\caption{Risk score paid vs. Log Insurance Premiums}
+	\label{fig:bmi_charges__dist}
+\end{figure}
+
+We can see that also demonstrates weakly positive correlation. Finally, the log total claims paid:
+
+\begin{figure}[H]
+  \centering
+	\includegraphics[width=\textwidth]{images/logclaimspaid_vs_logtotal.png}
+	\caption{Log Claims paid vs. Log Insurance Premiums}
+	\label{fig:bmi_charges__dist}
+\end{figure}
+
+Visually this is the best fit we have encountered so far. There is a strong positive correlation in the data.
+
+
 
 \subsection{The Case for Regression}
 
