@@ -49,14 +49,14 @@ save_plot("log_insurance_charges_vs_sex_distribution.png", log_sex_plot)
 
 # 2.3 - Explore variables among the sexes
 age_vs_sex_plot <- 
-  ggplot(df, aes(x=age, y=log(annual_premium), color=sex)) +
+  ggplot(df, aes(x=age, y=sex, color=sex)) +
   geom_boxplot(alpha=0.7, outlier.size=0.8) +
 	labs(title="Age Vs. Sex", x="sex", y="Age (Years)")
 age_vs_sex_plot
 save_plot("age_vs_sex_distribution.png", age_vs_sex_plot)
 
 age_vs_log_charges_plot <-
-  ggplot(df, aes(x=bmi, y=log(annual_premium), color=sex)) +
+  ggplot(df, aes(x=age, y=log(annual_premium), color=sex)) +
   geom_point(alpha = 0.2, size = 0.6) +
   geom_smooth(method = "lm", se = TRUE) +
 	labs(title="Age Vs. Log Charges", x="Age (Years)", y="Log Charges (USD)")
