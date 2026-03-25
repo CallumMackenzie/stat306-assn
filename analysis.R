@@ -99,6 +99,12 @@ ggplot() +
   geom_point(aes(x=m2$fitted.values, y=m2$residuals), alpha = 0.2, size = 0.6) +
   labs(title="Residuals vs Fitted Values", x="Fitted Values", y="Residuals")
 
+# Q-Q Plots
+qqnorm(residuals(m2), main = "Normal Q-Q Plot for Log Model")
+qqline(residuals(m2), col = "red")
+qqnorm(residuals(m2nolog), main = "Normal Q-Q Plot for Non-log Model")
+qqline(residuals(m2nolog), col = "red")
+
 summary(m1)
 summary(m2)
 summary(m1nolog)
