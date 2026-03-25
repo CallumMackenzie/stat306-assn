@@ -153,7 +153,7 @@ if (!dir.exists("latex")) dir.create("latex")
 if (!dir.exists("latex/tables")) dir.create("latex/tables")
 file.create("latex/tables/regression_table.tex")
 table_lines <- capture.output(
-  stargazer(m1, m2, mrisk,
+  stargazer(m1, m2, mrisk2,
             type="latex",
             title="Staged Linear Regression Results",
             covariate.labels=c("Sex (Male)", "Age (Years)", "BMI (kg/m$^2$)", "Risk Score", "Log(Claims Paid)"),
