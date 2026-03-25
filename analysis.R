@@ -112,7 +112,7 @@ summary(m2nolog)
 
 
 # Better model now
-mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ risk_score + log(total_claims_paid + 1), data=df)
+mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1), data=df)
 summary(mrisk)
 
 # Check assumptions
@@ -145,15 +145,15 @@ if (!dir.exists("latex")) dir.create("latex")
 if (!dir.exists("latex/tables")) dir.create("latex/tables")
 file.create("latex/tables/regression_table.tex")
 table_lines <- capture.output(
-  stargazer(m1, m2,
-    type="latex",
-    title="Staged Linear Regression Results",
-    covariate.labels=c("Sex", "Age (Years)", "BMI (kg/m$^2$)"),
-    column.labels=c("Sex Model", "Sex + Age + BMI"),
-    model.numbers=FALSE,
-    star.cutoffs=c(0.05, 0.01, 0.001),
-    digits=4,
-    no.space=TRUE
+  stargazer(m1, m2, mrisk,
+            type="latex",
+            title="Staged Linear Regression Results",
+            covariate.labels=c("Sex (Male)", "Age (Years)", "BMI (kg/m$^2$)", "Risk Score", "Log(Claims Paid)"),
+            column.labels=c("Sex Only", "Demographics", "Risk & Claims"),
+            model.numbers=FALSE,
+            star.cutoffs=c(0.05, 0.01, 0.001),
+            digits=4,
+            no.space=TRUE
   )
 )
 
