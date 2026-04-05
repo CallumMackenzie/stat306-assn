@@ -199,13 +199,27 @@ Visually this is the best fit we have encountered so far. There is a strong posi
 
 There are myriad factors to consider in attempting to understand the prices of medical insurance premiums, especially with the contentious notion of systemic discrimination. Thus, we look to linear regression to explain whether a sex is a primary determinant of what one is charged for medical insurance.
 
-We will examine two models:
+Evidenced by our EDA plots, there is negligible interaction between sex and age or sex and BMI, so we are only considering models which have the sex covariate changing the intercept. However, we will check the interaction between risk score and sex, as this could display discriminatory practices in the assignment of said score.
+
+We will select from the following models with 6,5,4,3,2, and 1 covariate(s) respectively:
 \begin{enumerate}
-    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}$
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}+\beta_4\cdot \text{Risk Score}+\beta_5\cdot\log\text{Claims Paid}+\beta_6\cdot(\text{Risk Score}\cdot\text{Sex})$
     \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}+\beta_4\cdot \text{Risk Score}+\beta_5\cdot\log\text{Claims Paid}$
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}+\beta_4\cdot \text{Risk Score}$
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}$
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}$
+    \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}$
 \end{enumerate}
 
-Evidenced by our EDA plots, there is negligible interaction between sex and age or sex and BMI, so we are only considering models which have the sex covariate changing the intercept.
+This provides the following Mallow's plot, with the $C_p$ value being log-plotted as to display some poorer-fitting models compared to the full model:
+\begin{figure}[H]
+  \centering
+	\includegraphics[width=\textwidth]{images/mallows.png}
+	\caption{Covariate Count vs Log Mallow's Statistic}
+	\label{fig:mallows`}
+\end{figure}
+
+By the principal of parsimony, we will select model $2$, as it is the simplest well-fitting model. Note that this model does not include the interaction between sex and risk score, however, this is okay. The $p$ value for the interaction term in the full model is $0.160$, which does not meet the significance threshold, and thus we can assume that the interaction is negligible.
 
 \newpage
 

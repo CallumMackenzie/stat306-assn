@@ -124,6 +124,63 @@ save_plot("logclaimspaid_vs_logtotal.png", huh_vs_log)
 
 
 # 2.4 - Linear regression 
+
+# ------------- MODEL SELECTION ---------------------
+
+# Full model
+# We are transforming annual premium to be log annual premium above baseline
+# We are transforming total claims paid to log total claims paid
+# We are including interaction between sex and risk score
+mfull <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + age + bmi + risk_score + log(total_claims_paid + 1) + sex:risk_score, data=df)
+summary(mfull)
+# 6 covariates, 7 coefficients
+
+# Look at qq and residuals for full model to ensure assumptions hold
+qqnorm(residuals(mfull), main = "Normal Q-Q Plot for Full Model")
+qqline(residuals(mfull), col = "red")
+# Residuals
+residual_plot <- ggplot() +
+  geom_point(aes(x=mfull$fitted.values, y=mfull$residuals), alpha = 0.2, size = 0.6) +
+  labs(title="Residuals vs Fitted Values for Full Model", x="Fitted Values", y="Residuals")
+residual_plot
+
+# Start calculating C_p 
+n <- nrow(df)
+ms_res_q <- sum(mfull$residuals ^ 2) / ( n - (6 + 1) )
+cp_6_1 <- sum(mfull$residuals ^ 2) / ms_res_q - (n - 2 * (6 + 1))
+
+# Interaction between risk and sex removed, p = 5
+m5_1 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + age + bmi + risk_score + log(total_claims_paid + 1), data=df)
+cp_5_1 <- sum(m5_1$residuals ^ 2) / ms_res_q - (n - 2 * (5 + 1))
+
+# Total claims paid removed, p = 4
+m4_2 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + age + bmi + risk_score, data=df)
+cp_4_2 <- sum(m4_2$residuals ^ 2) / ms_res_q - (n - 2 * (4 + 1))
+
+# Risk score removed, p = 4
+m4_1 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + age + bmi + log(total_claims_paid + 1), data=df)
+cp_4_1 <- sum(m4_1$residuals ^ 2) / ms_res_q - (n - 2 * (4 + 1))
+
+# Total claims paid removed, p = 3
+m3_1 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + age + bmi, data=df)
+cp_3_1 <- sum(m3_1$residuals ^ 2) / ms_res_q - (n - 2 * (3 + 1))
+
+# Bmi removed, p = 2
+m2_1 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + age, data=df)
+cp_2_1 <- sum(m2_1$residuals ^ 2) / ms_res_q - (n - 2 * (2 + 1))
+
+# Age removed, p = 1
+m1_1 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex, data=df)
+cp_1_1 <- sum(m1_1$residuals ^ 2) / ms_res_q - (n - 2 * (1 + 1))
+
+png("latex/images/mallows.png", width = 800, height = 600)
+plot(c(6, 5, 4, 3, 2, 1, 0), log(c(cp_6_1, cp_5_1, cp_4_1, cp_3_1, cp_2_1, cp_1_1, 1)), xlab = "Number of Covariates", ylab = "Log Mallow's Statistic (Cp)")
+segments(x0 = 0, y0 = 0, x1 = 6, y1 = log(6), col = "blue", lwd = 2)
+dev.off()
+
+
+# ----------- END MODEL SELECTION -------------------
+
 # Would have chosen more descriptive names but Stargazer has issues with long names for some reason
 m1 <- lm(log(annual_premium) ~ sex, data=df)
 m2 <- lm(log(annual_premium) ~ sex + age + bmi, data=df)
