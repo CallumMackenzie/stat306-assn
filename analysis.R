@@ -155,8 +155,10 @@ cp_2_1 <- sum(m2_1$residuals ^ 2) / ms_res_q - (n - 2 * (2 + 1))
 m1_1 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex, data=df)
 cp_1_1 <- sum(m1_1$residuals ^ 2) / ms_res_q - (n - 2 * (1 + 1))
 
-plot(c(6, 5, 4, 3, 2, 1, 0), log(c(cp_6_1, cp_5_1, cp_4_1, cp_3_1, cp_2_1, cp_1_1, 1)), xlab = "p", ylab = "Log Mallow's Statistic (Cp)")
+png("latex/images/mallows.png", width = 800, height = 600)
+plot(c(6, 5, 4, 3, 2, 1, 0), log(c(cp_6_1, cp_5_1, cp_4_1, cp_3_1, cp_2_1, cp_1_1, 1)), xlab = "Number of Covariates", ylab = "Log Mallow's Statistic (Cp)")
 segments(x0 = 0, y0 = 0, x1 = 6, y1 = log(6), col = "blue", lwd = 2)
+dev.off()
 
 
 # ----------- END MODEL SELECTION -------------------
