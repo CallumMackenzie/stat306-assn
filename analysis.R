@@ -14,7 +14,8 @@ save_plot <- function(filename, plot) {
 charges_plot <- 
 	ggplot(df, aes(x=annual_premium)) + 
 	geom_histogram(aes(y=after_stat(density))) + 
-	labs(title="Distribution of Insurance Charges", x="Charges (USD)", y="Density")
+	labs(title="Distribution of Insurance Charges", x="Charges (USD)", y="Density") + 
+	xlim(0, 2000)
 charges_plot
 save_plot("insurance_charges_distribution.png", charges_plot)
 
@@ -38,6 +39,23 @@ bmi_plot <-
 	labs(title="Distribution of BMI of Subjects", x="Body Mass Index (BMI)", y="Density")
 bmi_plot
 save_plot("bmi_distribution.png", bmi_plot)
+
+male_risk_plot <- 
+  ggplot(df[df$sex %in% c("Male"), ], aes(x=risk_score)) + 
+  geom_histogram(aes(y=after_stat(density))) + 
+  labs(title="Distribution of risk score of male subjects", x="Male risk score", y="Density")
+male_risk_plot
+save_plot("male_risk_plot.png", male_risk_plot)
+
+female_risk_plot <- 
+  ggplot(df[df$sex %in% c("Female"), ], aes(x=risk_score)) + 
+  geom_histogram(aes(y=after_stat(density))) + 
+  labs(title="Distribution of risk score of female subjects", x="Female risk score", y="Density")
+female_risk_plot
+save_plot("female_risk_plot.png", female_risk_plot)
+
+
+
 
 # 2.2 - Explore Bivariate (sex)
 log_sex_plot <- 
@@ -124,13 +142,8 @@ qqline(residuals(m2nolog), col = "red")
 
 
 # Better model now
-#mrisk <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1), data=df)
 mrisk2 <- lm(log(annual_premium - min(annual_premium) + 1) ~ sex + risk_score + log(total_claims_paid + 1) + age + bmi, data=df)
 summary(mrisk2)
-
-# Check assumptions
-#qqnorm(residuals(mrisk), main = "Q-Q Plot for Improved Model")
-#qqline(residuals(mrisk), col="red")
 
 png("latex/images/qqplot.png", width = 800, height = 600)
 qqnorm(residuals(mrisk2), main = "Q-Q Plot for Model")
