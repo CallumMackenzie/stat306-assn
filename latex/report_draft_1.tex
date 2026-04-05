@@ -195,7 +195,7 @@ Visually this is the best fit we have encountered so far. There is a strong posi
 
 
 
-\subsection{The Case for Regression}
+\subsection{Case for Regression and Model Selection}
 
 There are myriad factors to consider in attempting to understand the prices of medical insurance premiums, especially with the contentious notion of systemic discrimination. Thus, we look to linear regression to explain whether a sex is a primary determinant of what one is charged for medical insurance.
 
@@ -219,13 +219,17 @@ This provides the following Mallow's plot, with the $C_p$ value being log-plotte
 	\label{fig:mallows`}
 \end{figure}
 
-By the principal of parsimony, we will select model $2$, as it is the simplest well-fitting model. Note that this model does not include the interaction between sex and risk score, however, this is okay. The $p$ value for the interaction term in the full model is $0.160$, which does not meet the significance threshold, and thus we can assume that the interaction is negligible.
+By the principal of parsimony, we will select model $2$, as it is the simplest well-fitting model. Note that this model does not include the interaction between sex and risk score, however, this is okay. The $p$ value for the interaction term in the full model is $0.160$, which does not meet the significance threshold, and thus we will assume that the interaction is negligible.
 
 \newpage
 
-\input{tables/regression_table.tex}
+\subsection{Regression Analysis}
 
-In addition to the table above, we will note that the p-value for the intercept in the model with sex as the only covariate is $0.134$, and in the one with age, sex, and BMI, it is $0.164$.
+See our regression summary below for our selected model:
+
+$\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}+\beta_4\cdot \text{Risk Score}+\beta_5\cdot\log\text{Claims Paid}$
+
+\input{tables/regression_table.tex}
 
 We now have a clear picture of the data. First, we will check the hypothesis for the gender coefficient $H_0:\beta_1=0$, $H_1:B_1\neq0$. Given that the p-value for $\beta_0$ is below $0.05$ for both models, we accept the null hypothesis that there is no difference in the insurance premium between the sexes. This is consistent with the visual intuition obtained from the previous scatter plot that related age and BMI to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex model, while jumping to 0.1793 in the second one. 
 
