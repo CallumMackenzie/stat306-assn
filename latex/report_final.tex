@@ -87,9 +87,11 @@
 This report investigates whether sex exerts predictive power on medical insurance premiums after controlling for baseline demographics, health metrics, and financial histories—specifically age, body mass index (BMI), risk score, and total claims paid. Motivation comes from a collective interest in whether sex-based discrimination is present in the context of medical insurance applicants. Such an influence could suggest that insurance institutions operate under systemically discriminatory practices as it pertains to sex. 
 
 \subsection{Separate data section}
-Data was observed from a collection of studies conducted by accredited institutions such as the World Health Organization, the National Institute of Health, the Centre for Disease Control and Prevention, and more. The dataset itself provides information on approximately 100,000 individuals, including their “...demographics, socioeconomic status, health conditions, lifestyle factors, insurance plans, and medical expenditures”. As mentioned, age and BMI will serve as a primary basis for analysis. The studies that comprise this data set are observational as there is no intervention involved in gathering the data.
+\subsection{Separate data section}
 
-It may be helpful to note that the source under scrutiny that collected these studies underwent a partial cleaning and normalization procedure, so certain pieces of data, particularly in the extremities, may seem strange in isolation. In addition, the data becomes much more coherent beginning at the minimum value of the response variable, and performing a log transformation proved to be an important visual aid.
+The dataset used for this analysis was sourced from Kaggle and compiled by Mohan Krishna Thalla. According to the creator's methodology, the data was aggregated, cleaned, and prepared using public health information gathered from multiple verified sources, including the Centers for Medicare \& Medicaid Services (CMS), the U.S. Department of Health \& Human Services (HHS), and the Centers for Disease Control and Prevention's (CDC) National Health Interview Survey (NHIS). The dataset provides information on approximately 100,000 individuals, including their demographics, socioeconomic status, health conditions, lifestyle factors, and medical expenditures. As mentioned, age and BMI will serve as a primary basis for analysis.
+
+Due to severe right-skew in the response variable, we applied a mathematically shifted log transformation: $\log(\text{annual\_premium} - \min(\text{annual\_premium}) + 1)$. This handles values close to zero, normalizes the extreme right skew of the insurance costs, and is necessary to better satisfy the normality and homoscedasticity assumptions required for linear regression.
 
 The data we are using can be found \href{https://www.kaggle.com/datasets/mohankrishnathalla/medical-insurance-cost-prediction/data}{here}, which comes from the data aggregation website \href{https://www.kaggle.com}{Kaggle}.
 
@@ -148,6 +150,24 @@ We will also explore the risk score for both sexes. A similar distribution would
   \caption{Distributions of BMI and Age. We observe that they both seem are roughly normal.}
   \label{fig:predictor_dists}
 \end{figure}
+
+To provide a comprehensive overview of the data, the following table details the summary statistics for our continuous variables:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Variable} & \textbf{Min} & \textbf{Median} & \textbf{Mean} & \textbf{Max} & \textbf{SD} \\
+\midrule
+Age & 18.0 & 39.0 & 39.2 & 64.0 & 14.0 \\
+BMI & 15.9 & 30.4 & 30.6 & 53.1 & 6.1 \\
+Risk Score & 0.0 & 45.0 & 48.3 & 100.0 & 20.5 \\
+Annual Premium & 1121.0 & 9382.0 & 13270.0 & 63770.0 & 12110.0 \\
+\bottomrule
+\end{tabular}
+\caption{Summary statistics for continuous variables.}
+\label{tab:summary_stats}
+\end{table}
 
 \subsection{Bivariate Relationship}
 
@@ -232,7 +252,16 @@ We will examine two models:
     \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}+\beta_4\cdot \text{Risk Score}+\beta_5\cdot\log\text{Claims Paid}$
 \end{enumerate}
 
-Evidenced by our EDA plots, there is negligible interaction between sex and age or sex and BMI, so we are only considering models which have the sex covariate changing the intercept.
+Evidenced by our EDA plots, there is negligible interaction between sex and age or sex and BMI. However, to formally select our model, we performed subset selection using Mallow's $C_p$ to find the most parsimonious model that adequately explains the variance in our response. We started with a full model containing all covariates plus an interaction term between sex and risk score.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/mallows.png}
+  \caption{Model selection evaluating Mallow's $C_p$ across number of covariates.}
+  \label{fig:mallows}
+\end{figure}
+
+As shown in Figure \ref{fig:mallows}, a model with 5 covariates minimizes Mallow's $C_p$ compared to the full 6-covariate model. This mathematically justifies dropping the interaction term, leading us to our final evaluated models where the sex covariate only changes the intercept.
 
 \newpage
 
