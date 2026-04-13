@@ -220,18 +220,19 @@ if (!dir.exists("latex")) dir.create("latex")
 if (!dir.exists("latex/tables")) dir.create("latex/tables")
 file.create("latex/tables/regression_table.tex")
 table_lines <- capture.output(
-  stargazer(mrisk2,
+  stargazer(m1, m2, mrisk2, # Include all models if you want all 3 columns
             type="latex",
+            float=FALSE,   
             title="Staged Linear Regression Results",
             covariate.labels=c("Sex (Male)", "Age (Years)", "BMI (kg/m$^2$)", "Risk Score", "Log(Claims Paid)"),
             column.labels=c("Sex Only", "Demographics", "Risk & Claims"),
             model.numbers=FALSE,
-						dep.var.labels = "Log(Claims Paid)",
-						omit.table.layout = "d",
+            dep.var.labels = "Log(Claims Paid)",
+            omit.table.layout = "d",
             star.cutoffs=c(0.05, 0.01, 0.001),
             digits=4,
             no.space=TRUE,
-						out.header = FALSE
+            out.header = FALSE
   )
 )
 

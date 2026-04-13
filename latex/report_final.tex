@@ -264,7 +264,12 @@ As shown in Figure \ref{fig:mallows}, a model with 5 covariates minimizes Mallow
 
 \newpage
 
-\input{tables/regression_table.tex}
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+    \input{tables/regression_table.tex}
+  \end{adjustbox}
+\end{table}
 
 In addition to the table above, we will note that the p-value for the intercept in the model with sex as the only covariate is $0.134$, and in the one with age, sex, and BMI, it is $0.164$.
 
