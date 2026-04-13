@@ -31,3 +31,11 @@ I need someone to do a quick final pass on two things:
 1. Verify the Table Numbers: Could someone run analysis.R and double-check the exact summary statistics (Min, Median, Mean, Max, SD) for our continuous variables? Update the numbers in the LaTeX table (\label{tab:summary_stats}) so they perfectly match our specific R output.
 
 2. Add the Plot: Make sure the mallows.png plot (generated during the model selection part of the R script) is actually saved in the images/ folder and compiles correctly into the PDF.
+
+TODO(RESUBMITION)
+
+1) Please add a page to the beginning of your report summarizing changes that were made since the first draft. Bullet point is fine. This page does not count towards page limits. A penalty will be applied if this is not done. If no changes were made, please indicate that on the page.
+
+2) Please indicate which group member submitted the code/data files at the end of the final report.
+
+3) Remember to complete peer evaluations after submitting the second draft.
