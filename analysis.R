@@ -5,6 +5,10 @@ library(stargazer)
 df <- read.csv("data/medical_insurance.csv")
 df <- df[df$sex %in% c("Female", "Male"), ]
 
+#Summary Statistics
+summary(df)
+
+
 # Helper for saving files to disk with a consistent size
 save_plot <- function(filename, plot) {
 	ggsave(paste0("latex/images/", filename), plot, width=7, height=4.5, dpi=150)
