@@ -1,6 +1,6 @@
 
 \documentclass[12pt, a4paper]{article}
-
+ 
 \usepackage[margin=1in]{geometry}
 \usepackage{setspace}
 \usepackage{parskip}
@@ -21,118 +21,135 @@
 \usepackage{xcolor}
 \usepackage{lscape}
 \usepackage{microtype}
-
+ 
 \onehalfspacing
-
+ 
 \definecolor{accentblue}{RGB}{30, 80, 150}
-
-
+ 
+ 
 \titleformat{\section}
   {\large\bfseries\color{accentblue}}
   {\thesection.}{0.75em}{}[\titlerule]
-
+ 
 \titleformat{\subsection}
   {\normalsize\bfseries}
   {\thesubsection.}{0.75em}{}
-
+ 
 \captionsetup{
   font=small,
   labelfont=bf,
   labelsep=period,
   justification=centering
 }
-
+ 
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\textit{Medical Insurance Charges: Sex-Based Analysis}}
-\fancyhead[R]{\small\textit{March 24, 2026}}
+\fancyhead[R]{\small\textit{April 12, 2026}}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-
+ 
 \hypersetup{
   colorlinks = true,
   linkcolor = accentblue,
   citecolor = accentblue,
   urlcolor = accentblue
 }
-
+ 
 \begin{document}
-
+ 
 \begin{titlepage}
   \centering
   \vspace*{2cm}
-
+ 
   {\LARGE\bfseries Medical Insurance Charges:\\[0.4em]
   Sex-Based Analysis}
-
+ 
   \vspace{1.5cm}
-
+ 
 	{\large Matthew deHaas, Callum Mackenzie, Saksham Saksham, Nihar Mahajan}
-
+ 
   \vspace{1.5cm}
-
+ 
   {\normalsize {Course: STAT 306}}\\[0.4em]
   {\normalsize Instructor: Kenny Chiu}
-
+ 
   \vfill
-
+ 
   {\normalsize April 12, 2026}
-
+ 
   \vspace{1cm}
 \end{titlepage}
+ 
 
+\section*{Statement of Changes}
+\addcontentsline{toc}{section}{Statement of Changes}
+ 
+The following updates were made to the report since Draft 1:
+\begin{itemize}
+    \item Added a dedicated Data subsection specifying the source, upstream providers, time range, variable descriptions, and data preparation steps.
+    \item Added histograms of risk score stratified by sex to the exploratory analysis, to assess risk score as a potential confounder.
+    \item \item Added a summary-statistics table for continuous variables, computed on the analysis dataset.
+    \item Added formal model selection using Mallow's $C_p$, considering candidate models with and without a sex--risk-score interaction term.
+    \item Reported the sex--risk-score interaction coefficient explicitly, as this directly addresses the research question of differential premium response by sex.
+    \item Corrected a sign error in the hypothesis-test discussion for the sex coefficient.
+    \item Corrected figure numbering and various prose and grammatical errors.
+   
+\end{itemize}
+\newpage
+ 
 \section{Introduction}
-
+ 
 \subsection{Overview}
-This report investigates whether sex exerts predictive power on medical insurance premiums after controlling for baseline demographics, health metrics, and financial histories—specifically age, body mass index (BMI), risk score, and total claims paid. Motivation comes from a collective interest in whether sex-based discrimination is present in the context of medical insurance applicants. Such an influence could suggest that insurance institutions operate under systemically discriminatory practices as it pertains to sex. 
-
-\subsection{Separate data section}
-
+This report investigates whether sex exerts predictive power on medical insurance premiums after controlling for baseline demographics, health metrics, and financial histories—specifically age, body mass index (BMI), risk score, and total claims paid. Motivation comes from a collective interest in whether sex-based discrimination is present in the context of medical insurance applicants. Such an influence could suggest that insurance institutions operate under systemically discriminatory practices as it pertains to sex.
+ 
+\subsection{The Data}
+ 
 The dataset used for this analysis was sourced from Kaggle and compiled by Mohan Krishna Thalla. According to the creator's methodology, the data was aggregated, cleaned, and prepared using public health information gathered from multiple verified sources, including the Centers for Medicare \& Medicaid Services (CMS), the U.S. Department of Health \& Human Services (HHS), and the Centers for Disease Control and Prevention's (CDC) National Health Interview Survey (NHIS). The dataset provides information on approximately 100,000 individuals, including their demographics, socioeconomic status, health conditions, lifestyle factors, and medical expenditures. As mentioned, age and BMI will serve as a primary basis for analysis.
-
+ 
 Due to severe right-skew in the response variable, we applied a mathematically shifted log transformation: $\log(\text{annual\_premium} - \min(\text{annual\_premium}) + 1)$. This handles values close to zero, normalizes the extreme right skew of the insurance costs, and is necessary to better satisfy the normality and homoscedasticity assumptions required for linear regression.
-
+ 
 The data we are using can be found \href{https://www.kaggle.com/datasets/mohankrishnathalla/medical-insurance-cost-prediction/data}{here}, which comes from the data aggregation website \href{https://www.kaggle.com}{Kaggle}.
-
+ 
 \section{Analysis}
-
+ 
 \subsection{Univariate Summaries}
-
+ 
 To begin, we introduce the variables used for analysis and their respective shapes.
-
+ 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.75\textwidth]{images/insurance_charges_distribution.png}
-  \caption{Distribution of annual insurance premiums. There is significant right skew, so perhaps a log transformation is more appropriate.}
+  \caption{Distribution of annual insurance premiums. There is significant right skew, so a log transformation is more appropriate. Values above \$2{,}000 are present but represent a small tail and are better visualized on the log scale in Figure \ref{fig:log_charges_dist}.}
   \label{fig:charges_dist}
 \end{figure}
-
+ 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.75\textwidth]{images/log_insurance_charges_distribution.png}
-	\caption{Much more suitable for analysis.} 
+	\caption{Distribution of log-transformed insurance premiums. The transformation produces a distribution much more suitable for linear regression.}
   \label{fig:log_charges_dist}
 \end{figure}
-
-We will also explore the risk score for both sexes. A similar distribution would allow one to rule out risk score as a confounder, which is vital in when the discussion questions whether sex affects premiums:   
+ 
+We also examine the distribution of risk score stratified by sex. If the two distributions are similar, this weakens the case for risk score acting as a confounder in the sex--premium relationship.
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{images/male_risk_plot.png}
-    \caption{Male score}
-    \label{fig:age_dist}
+    \caption{Male risk score}
+    \label{fig:male_risk}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{images/female_risk_plot.png}
     \caption{Female risk score}
-    \label{fig:bmi_dist}
+    \label{fig:female_risk}
   \end{subfigure}
-  \caption{Distributions of risk scores for male and females. We observe that they are very similar, which strengthens the case for ruling out risk score as a confounder.}
-  \label{fig:predictor_dists}
+  \caption{Distributions of risk scores for males and females. The two distributions are visually very similar, which weakens the case for risk score acting as a sex-based confounder.}
+  \label{fig:risk_by_sex}
 \end{figure}
-
-
+ 
+ 
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
@@ -146,183 +163,188 @@ We will also explore the risk score for both sexes. A similar distribution would
     \caption{BMI}
     \label{fig:bmi_dist}
   \end{subfigure}
-  \caption{Distributions of BMI and Age. We observe that they both seem are roughly normal.}
-  \label{fig:predictor_dists}
+  \caption{Distributions of Age and BMI. Both appear roughly normally distributed.}
+  \label{fig:age_bmi_dists}
 \end{figure}
-
-To provide a comprehensive overview of the data, the following table details the summary statistics for our continuous variables:
-
+ 
+To provide a comprehensive overview of the data, the following table details summary statistics for the continuous variables used in our analysis:
+ 
 \begin{table}[H]
 \centering
 \begin{tabular}{lrrrrr}
 \toprule
 \textbf{Variable} & \textbf{Min} & \textbf{Median} & \textbf{Mean} & \textbf{Max} & \textbf{SD} \\
 \midrule
-Age & 18.0 & 39.0 & 39.2 & 64.0 & 14.0 \\
-BMI & 15.9 & 30.4 & 30.6 & 53.1 & 6.1 \\
-Risk Score & 0.0 & 45.0 & 48.3 & 100.0 & 20.5 \\
-Annual Premium & 1121.0 & 9382.0 & 13270.0 & 63770.0 & 12110.0 \\
+Age (years)             & 0.00    & 48.00   & 47.52   & 100.00    & 15.99 \\
+BMI (kg/m$^2$)          & 12.00   & 27.00   & 26.99   & 50.40     & 4.99  \\
+Risk Score              & 0.00    & 0.51    & 0.52    & 1.00      & 0.25  \\
+Annual Premium (USD)    & 211.67  & 463.59  & 582.32  & 10{,}962.55 & 399.58 \\
 \bottomrule
 \end{tabular}
-\caption{Summary statistics for continuous variables.}
+\caption{Summary statistics for continuous variables. Risk score is a composite index on a 0--1 scale, where higher values indicate greater assessed health risk.}
 \label{tab:summary_stats}
 \end{table}
-
+ 
 \subsection{Bivariate Relationship}
-
+ 
 We now explore how sex in isolation relates to insurance premiums.
-
+ 
 \begin{figure}[H]
-	\includegraphics[width=\textwidth]{images/log_insurance_charges_vs_sex_distribution.png}
-	\caption{Log Insurance Premiums vs. Sex }
-  \caption{Insurance premiums as a function of the sexes}
-  \label{fig:predictor_dists}
+  \centering
+	\includegraphics[width=0.75\textwidth]{images/log_insurance_charges_vs_sex_distribution.png}
+  \caption{Log annual insurance premiums by sex. The medians and interquartile ranges are nearly identical, suggesting little raw difference between the sexes.}
+  \label{fig:premium_by_sex}
 \end{figure}
-
+ 
 \subsection{Confounders}
-
-This looks promising, but a simple male to female comparison is naive. We now consider how age and BMI are distributed across the sexes, as well as how they compare to (log) insurance premiums.
-
+ 
+This looks promising, but a simple male-to-female comparison is naive. We now consider how age and BMI are distributed across the sexes, as well as how each relates to log insurance premiums.
+ 
 \begin{figure}[H]
 	\centering
-
   \begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{images/age_vs_sex_distribution.png}
 		\caption{Age vs. Sex}
-		\label{fig:age_sex__dist}
+		\label{fig:age_sex_dist}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{images/age_vs_log_charges_distribution.png}
 		\caption{Age vs. Log Insurance Premiums}
-		\label{fig:age_charges__dist}
+		\label{fig:age_charges_dist}
   \end{subfigure}
-
+  \caption{Age distributions by sex, and the relationship between age and log premiums.}
+  \label{fig:age_confounding}
 \end{figure}
-
-Observe that the distribution of age among the sexes is nearly identical as per the box plots. In addition, the relationship between age and age and premiums is weakly positive among the sexes. We can infer that age is an unlikely influence on the differences in premiums among the sexes.
-
+ 
+The distribution of age across the sexes is nearly identical. The relationship between age and log premiums is weakly positive and comparable for both sexes. We infer that age is an unlikely sex-based confounder.
+ 
 \begin{figure}[H]
   \centering
-
   \begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{images/bmi_vs_sex_distribution.png}
 		\caption{BMI vs. Sex}
-		\label{fig:bmi_sex__dist}
+		\label{fig:bmi_sex_dist}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{images/age_vs_log_charges_distribution.png}
+		\includegraphics[width=\textwidth]{images/bmi_vs_log_charges_distribution.png}
 		\caption{BMI vs. Log Insurance Premiums}
-		\label{fig:bmi_charges__dist}
+		\label{fig:bmi_charges_dist}
   \end{subfigure}
-
+  \caption{BMI distributions by sex, and the relationship between BMI and log premiums.}
+  \label{fig:bmi_confounding}
 \end{figure}
-
-Similarly, BMI itself and its relationship with premiums are weakly positive among the sexes. We can comfortably conclude now that the variables age and BMI under scrutiny here are not likely to be confounding in comparison between sex and medical insurance premiums. Now consider the risk score:
-
+ 
+Similarly, the BMI distributions and BMI--premium relationships are nearly identical across the sexes. We conclude that age and BMI are unlikely to confound the sex--premium comparison. We now consider risk score:
+ 
 \begin{figure}[H]
   \centering
-	\includegraphics[width=\textwidth]{images/risk_vs_logtotal.png}
-	\caption{Risk score paid vs. Log Insurance Premiums}
-	\label{fig:bmi_charges__dist}
+	\includegraphics[width=0.75\textwidth]{images/risk_vs_logtotal.png}
+	\caption{Risk score vs. log insurance premiums, stratified by sex.}
+	\label{fig:risk_charges}
 \end{figure}
-
-We can see that also demonstrates weakly positive correlation. Finally, the log total claims paid:
-
+ 
+The relationship is weakly positive and the fitted lines for the two sexes are nearly overlapping, again suggesting that risk score operates similarly across sexes. Finally, log total claims paid:
+ 
 \begin{figure}[H]
   \centering
-	\includegraphics[width=\textwidth]{images/logclaimspaid_vs_logtotal.png}
-	\caption{Log Claims paid vs. Log Insurance Premiums}
-	\label{fig:bmi_charges__dist}
+	\includegraphics[width=0.75\textwidth]{images/logclaimspaid_vs_logtotal.png}
+	\caption{Log total claims paid vs. log insurance premiums, stratified by sex.}
+	\label{fig:claims_charges}
 \end{figure}
-
-Visually this is the best fit we have encountered so far. There is a strong positive correlation in the data.
-
-
-
+ 
+This is the strongest bivariate relationship we have encountered, with a clear positive correlation and the two sex-specific fitted lines essentially on top of one another.
+ 
 \subsection{The Case for Regression}
-
-There are myriad factors to consider in attempting to understand the prices of medical insurance premiums, especially with the contentious notion of systemic discrimination. Thus, we look to linear regression to explain whether a sex is a primary determinant of what one is charged for medical insurance.
-
-We will examine two models:
+ 
+There are many factors to consider when modeling medical insurance premiums, especially in the context of possible systemic discrimination. We turn to linear regression to formally assess whether sex is a significant predictor of premium once other covariates are controlled.
+ 
+We examined two primary models:
 \begin{enumerate}
     \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}$
     \item $\log Y=\beta_0+\beta_1\cdot\text{Sex}+\beta_2\cdot\text{Age}+\beta_3\cdot\text{BMI}+\beta_4\cdot \text{Risk Score}+\beta_5\cdot\log\text{Claims Paid}$
 \end{enumerate}
-
-Evidenced by our EDA plots, there is negligible interaction between sex and age or sex and BMI. However, to formally select our model, we performed subset selection using Mallow's $C_p$ to find the most parsimonious model that adequately explains the variance in our response. We started with a full model containing all covariates plus an interaction term between sex and risk score.
-
+ 
+Model 1 serves as a baseline showing the raw sex--premium relationship without covariate adjustment; Model 2 is our adjusted specification. To formally select between candidate specifications, we performed subset selection using Mallow's $C_p$. We began with a full model that added a sex--risk-score interaction term to Model 2, since such an interaction would directly operationalize the hypothesis that risk score affects premiums differently by sex---the most direct formal test of the discrimination question. We then fit all nested candidate models obtained by removing covariates one at a time.
+ 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.6\textwidth]{images/mallows.png}
-  \caption{Model selection evaluating Mallow's $C_p$ across number of covariates.}
+  \caption{Mallow's $C_p$ plotted against number of covariates $p$. The diagonal reference line corresponds to the ideal $C_p \approx p + 1$.}
   \label{fig:mallows}
 \end{figure}
-
-As shown in Figure \ref{fig:mallows}, a model with 5 covariates minimizes Mallow's $C_p$ compared to the full 6-covariate model. This mathematically justifies dropping the interaction term, leading us to our final evaluated models where the sex covariate only changes the intercept.
-
+ 
+The $C_p$ criterion selected the 5-covariate model (Model 2 above), indicating that adding the sex--risk-score interaction did not sufficiently improve fit to justify the additional parameter. We verified this result directly: in the full model with the interaction included, the coefficient for sex$\,\times\,$risk-score had estimate $\hat{\beta} = \textit{$0.0282847$}$ with standard error $\textit{$0.0201192$}$ and $p = \textit{ $0.160$}$, providing no evidence that the effect of risk score on premium differs by sex. Both the $C_p$ criterion and the direct hypothesis test on the interaction term point to the same conclusion, so we proceed with Model 2, in which sex enters the model only as an intercept shift.
+ 
+ 
 \newpage
-
+ 
 \begin{table}[H]
   \centering
   \begin{adjustbox}{max width=\textwidth}
     \input{tables/regression_table.tex}
   \end{adjustbox}
+  \caption{Regression results. Column 1 is the univariate model with sex only; Column 2 adds age and BMI; Column 3 is the full Model 2 including risk score and log claims paid.}
 \end{table}
-
-In addition to the table above, we will note that the p-value for the intercept in the model with sex as the only covariate is $0.134$, and in the one with age, sex, and BMI, it is $0.164$.
-
-We now have a clear picture of the data. First, we will check the hypothesis for the gender coefficient $H_0:\beta_1=0$, $H_1:B_1\neq0$. Given that the p-value for $\beta_1$ is below $0.05$ for both models, we failed to reject the null hypothesis that there is no difference in the insurance premium between the sexes. This is consistent with the visual intuition obtained from the previous scatter plot that related age and BMI to log premiums separately. This is strengthened by the $R^2$, the variable responsible for the proportion of variance in log premiums explained by the covariates in the model. It was at a negligible 0.00002 in the sex model, while jumping to 0.1793 in the second one. 
-
-We can see that other than sex, all of the other coefficients are statistically significant. Risk score and log claims paid have small nominal coefficients of $-0.0083$ and $0.0026$, respectively. Conversely, age and BMI have larger coefficients of $1.4854$ and $0.0428$, respectively. Under the hypothesis tests $H_0: \beta_4 = 0$, $H_1: \beta_4 \neq 0$, we reject the null hypothesis and state there is a statistically significant relationship between risk score and insurance premiums. Similar logic holds for log claims paid ($H_0: \beta_5 = 0$, $H_1: \beta_5 \neq 0$); we reject the null and conclude there is a relationship between historical claims paid and the resulting insurance premiums.
-
-To evaluate our assumptions we will examine the Q-Q and residual-fitted value plots:
-
+ 
+We now interpret these results. Testing the sex coefficient with $H_0:\beta_1=0$ versus $H_1:\beta_1\neq 0$, we find $p\text{-values}$ of approximately $0.14$ (Model 1) and $0.13$ (Model 2, the full model), both of which are \textbf{above} the $0.05$ significance threshold. We therefore \textbf{fail to reject} the null hypothesis that sex has no effect on log premium in either specification. This is consistent with the visual intuition from our bivariate plots, where the male and female fitted lines were essentially indistinguishable for every covariate examined.
+ 
+The practical magnitude of the estimated sex effect reinforces this conclusion. In the full model, the coefficient on Sex (Male) is $0.0075$, meaning that---holding age, BMI, risk score, and claims history constant---the average difference in log premium between males and females is less than $1\%$. Even if this were statistically significant, it would be of negligible practical importance.
+ 
+The $R^2$ values further contextualize the story. Model 1, with sex as the only predictor, explains a negligible $0.002\%$ of the variance in log premiums. The full model explains approximately $17.9\%$, confirming that most explanatory power comes from the non-sex covariates rather than sex itself.
+ 
+The other coefficients in the full model are all statistically significant at the $p<0.001$ level. Age has the largest standardized effect ($\hat{\beta}_2 = 1.485$), followed by BMI ($\hat{\beta}_3 = 0.043$), log claims paid ($\hat{\beta}_5 = 0.0026$), and risk score, which has a small negative coefficient ($\hat{\beta}_4 = -0.0083$). The negative sign on risk score is initially counterintuitive---one might expect higher-risk individuals to pay higher premiums---but in a model that already conditions on age, BMI, and claims history, the residual variation in risk score captures something different from what risk score captures in isolation, and can plausibly take a small negative sign. This is worth flagging as an interesting feature of the fit.
+ 
+To evaluate the regression assumptions for Model 2 we examine the Q--Q and residuals-vs-fitted plots:
+ 
 \begin{figure}[H]
   \centering
-
   \begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{images/qqplot.png}
-		\caption{Q-Q Plot for Model 2}
-		\label{fig:bmi_sex__dist}
+		\caption{Q--Q Plot for Model 2}
+		\label{fig:qq}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{images/mrisk_residuals.png}
-		\caption{Residual-Fitted Value Plot for Model 2}
-		\label{fig:bmi_charges__dist}
+		\caption{Residuals vs. Fitted for Model 2}
+		\label{fig:resid}
   \end{subfigure}
-
+  \caption{Diagnostic plots for the full adjusted model.}
+  \label{fig:diagnostics}
 \end{figure}
-
-Our Q-Q plot does not have significant tails, so our normality assumption roughly holds. As well, our fitted value-residual plot does not have any obvious patterns, meaning our homoscedasicity assumption holds.
-
+ 
+The Q--Q plot tracks the reference line closely with only minor tail deviations, so the normality assumption holds to a reasonable approximation at this sample size. The residuals-vs-fitted plot shows no obvious pattern or funnel shape, supporting the homoscedasticity assumption. 
+ 
 \section{Conclusion}
-
-The motivating question for this report was whether sex was a significant predictor for medical insurance premiums when controlling for demographic conditions such as age and BMI. According to this study, we are confident in the assertion that there exists no strong relationship between what an individual is charged and their sex. However, the particular covariates used only account for under 18\% of the variance in insurance premiums, thus there may still exist unobserved confounding variables. This is a limitation of the our study. To address this, in future analysis, we should include additional variables in the model so to explain more of the data's variation such as smoking status, geographic region, previous health complications, since the core motivation is to isolate the unencumbered interaction between sex medical insurance premiums.
- However, we can state that there does exist a relationship between an individual's risk score and claims paid with their insurance premium.  
-
+ 
+The motivating question for this report was whether sex is a significant predictor of medical insurance premiums after controlling for demographic and health covariates. Across all of our analyses---the raw bivariate comparison, the adjusted regression, the sex--risk-score interaction test, and the formal $C_p$ model-selection procedure---the evidence consistently points in the same direction: we find no statistical or practical support for a sex-based difference in premiums in this dataset. The coefficient on sex is small and not significant, the interaction with risk score is not significant, and visual inspection shows male and female patterns that are essentially indistinguishable across every covariate we examined.
+ 
+That said, our analysis has meaningful limitations. The full model explains only about $18\%$ of the variance in log premiums, leaving the majority of variation unexplained. There may be unobserved confounders---smoking status, geographic region, prior medical conditions, plan type, or socioeconomic factors---that, if included, could change the picture. A negative finding in a limited specification is not the same as evidence of equal treatment in the underlying insurance system. Future work should incorporate additional covariates available in the broader dataset (the original Kaggle file includes smoking, region, chronic conditions, and plan type) to further isolate the sex--premium relationship. An additional caveat is that the dataset has been curated and cleaned from multiple upstream sources, which may have smoothed real-world variation; results should be understood in that context.
+ 
+What we \emph{can} confidently state is that risk score and log total claims paid are significantly associated with insurance premiums, consistent with the intuitive expectation that insurers price premiums in part on assessed health risk and historical claims behavior.
+ 
 \section{Statement of AI}
-
-Artificial Intelligence was leveraged to improve the style of the report, particular to assist in improving the visual quality and over all professionalism, as well as to perform certain meta tasks auxiliary to the project such as saving plots to disk and containerizing a collaborative development workflow.
-
+ 
+Artificial Intelligence was leveraged to improve the style and visual quality of the report, and to perform certain meta-tasks auxiliary to the project such as saving plots to disk and containerizing a collaborative development workflow.
+ 
 \section{Appendix}
-
+ 
 The following prompts were used:
 \begin{itemize}
     \item ``How do I save a plot generated by \texttt{qqnorm(residuals(mrisk), main = "Q-Q Plot for Model")} \texttt{qqline(residuals(mrisk), col="red")} to disk?''
-    
+ 
     \item ``I am looking to produce a professional looking statistical report written in LaTeX. Can you provide for me a generic LaTeX template I can use as a starting point?''
-    
+ 
     \item ``I am looking to export and reference the output of the \texttt{summary(model)} function call sent to standard output in R. What is the industry standard approach for such a task?''
-    
+ 
     \item ``Write for me a Dockerfile that containerizes an R and LaTeX environment, as well as a shell script that runs the \texttt{analysis.R} R script, including a \texttt{-c} flag that compiles the LaTeX file, in the Docker container.''
 \end{itemize}
-
-
+ 
+ 
 \newpage
 \bibliographystyle{plainnat}
 \bibliography{references}
-
+ 
 \end{document}
